@@ -156,10 +156,16 @@ class ViewpointSelector(nn.Module):
         @return:
         """
         an,rfn,h,w,_=ref_imgs.shape
-        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs).transpose([0, 1, 4, 2, 3])).cuda()  # an,rfn,3,h,w
-        ref_poses, object_center, object_vert = torch.from_numpy(ref_poses.astype(np.float32)).cuda(), \
-                                                torch.from_numpy(object_center.astype(np.float32)).cuda(), \
-                                                torch.from_numpy(object_vert.astype(np.float32)).cuda()
+        # ref_imgs = torch.from_numpy(color_map_forward(ref_imgs).transpose([0, 1, 4, 2, 3])).cuda()  # an,rfn,3,h,w
+        # ref_poses, object_center, object_vert = torch.from_numpy(ref_poses.astype(np.float32)).cuda(), \
+        #                                         torch.from_numpy(object_center.astype(np.float32)).cuda(), \
+        #                                         torch.from_numpy(object_vert.astype(np.float32)).cuda()
+                                                
+        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs).transpose([0, 1, 4, 2, 3]))  # an,rfn,3,h,w
+        ref_poses, object_center, object_vert = torch.from_numpy(ref_poses.astype(np.float32)), \
+                                                torch.from_numpy(object_center.astype(np.float32)), \
+                                                torch.from_numpy(object_vert.astype(np.float32))                                    
+                                                
         self.extract_ref_feats(ref_imgs, ref_poses, object_center, object_vert)
 
     def select_que_imgs(self, que_imgs):
@@ -167,7 +173,8 @@ class ViewpointSelector(nn.Module):
         @param que_imgs: [qn,h,w,3]
         @return:
         """
-        que_imgs = torch.from_numpy(color_map_forward(que_imgs).transpose([0, 3, 1, 2])).cuda()  # qn,3,h,w
+        # que_imgs = torch.from_numpy(color_map_forward(que_imgs).transpose([0, 3, 1, 2])).cuda()  # qn,3,h,w
+        que_imgs = torch.from_numpy(color_map_forward(que_imgs).transpose([0, 3, 1, 2]))  # qn,3,h,w
         logits, angles = self.compute_view_point_feats(que_imgs) # qn,rfn
         ref_idx = torch.argmax(logits,1) # qn,
         angles = angles[torch.arange(ref_idx.shape[0]), ref_idx] # qn,

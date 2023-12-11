@@ -535,7 +535,8 @@ def to_cuda(data):
             results[k]=to_cuda(v)
         return results
     elif type(data).__name__ == "Tensor":
-        return data.cuda()
+        # return data.cuda()
+        return data
     else:
         return data
 
