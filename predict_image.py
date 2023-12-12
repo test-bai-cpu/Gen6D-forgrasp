@@ -54,6 +54,7 @@ def main(args):
 
     if pose_init is not None:
         estimator.cfg['refine_iter'] = 1 # we only refine one time after initialization
+    estimator.cfg['refine_iter'] = 10
     pose_pr, inter_results = estimator.predict(img, K, pose_init=pose_init)
     pose_init = pose_pr
 
